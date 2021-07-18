@@ -14,16 +14,12 @@ class Search extends React.Component {
     handleChange(e) {
         e.preventDefault();
         const searchTerm = e.target.value;
-        if (searchTerm) {
-            this.setState({ searchTerm: searchTerm });
-        }
+        this.setState({ searchTerm: searchTerm });
     };
 
     handleSubmit(e) {
         e.preventDefault();
-        if (this.state.searchTerm) {
-            this.props.onSearchCourses(this.state.searchTerm);
-        }
+        this.props.onSearchCourses(this.state.searchTerm);
     }
 
     render() {
