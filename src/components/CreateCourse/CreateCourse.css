@@ -1,0 +1,72 @@
+.main-block {
+    display: flex;
+    align-items: baseline;
+}
+
+.new-course-block  {
+    margin-top: 50px;
+    margin-left: 30px;
+}
+
+.main-title-block {
+    display: flex;
+    flex-direction: column;
+}
+
+.left-side {
+    justify-content: flex-start;
+}
+
+.right-side {
+    justify-content: flex-end;
+    align-self: center;
+    margin-left: auto;
+}
+
+.row-blocks {
+    display: flex;
+    flex-direction: row;
+    margin-top: 30px;
+}
+
+.title-for-creation {
+    font-weight: normal;
+    font-size: large;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.description-block {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+}
+
+.left-block {
+    width: 45%;
+}
+
+.right-block {
+    margin-left: 10%;
+    width: 45%;
+}
+
+.input {
+    width: 100%;
+}
+
+.duration {
+    font-size: xx-large;
+}
+
+.author-existing-block {
+    display: flex;
+    margin-top: 10px;
+}
+
+.author-name {
+    width: 50%;
+}

@@ -1,0 +1,32 @@
+.course-block {
+    display: flex;
+}
+.left {
+    display: flex;
+    min-width: 600px;
+    width: 70%;
+    flex-direction: column;
+}
+
+.right {
+    display: flex;
+    flex-direction: column;
+    margin-top: 40px;
+    justify-content: space-evenly;
+} 
+
+.title {
+    font-weight: bold;
+}
+
+.description {
+    width: 70%
+}
+
+.authors-line {
+    width: 200px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
+    overflow: hidden;
+}

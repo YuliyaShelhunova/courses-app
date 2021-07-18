@@ -1,0 +1,20 @@
+.main-button {
+    display: flex;
+    justify-content: flex-end;
+    align-self: center;
+    margin: 0 30px;
+}
+
+.new-course {
+    margin-top: -22px;
+}
+
+.search-button {
+    margin-left: 10px !important;
+}
+
+.create-author {
+    margin-top: 10px;
+    justify-content: center;
+    display: flex;
+}

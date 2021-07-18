@@ -1,0 +1,6 @@
+.user {
+    display: flex;
+    justify-content: flex-end;
+    align-self: center;
+    margin-left: auto;
+}
