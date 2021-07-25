@@ -1,0 +1,30 @@
+.registration {
+    display: flex;
+    justify-content: center;
+}
+
+.registration-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.registration-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.input-block {
+    display: flex;
+    margin-bottom: 20px;
+    flex-direction: column;
+}
+
+.header-title {
+    justify-content: center;
+    display: flex;
+}
+
+.registration-link {
+    font-size: small;
+}

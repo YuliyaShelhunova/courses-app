@@ -1,46 +1,58 @@
-import './Courses.css';
-import React from "react";
+import "./Courses.css";
+import React, { useEffect, useState } from "react";
 import Search from "../Search/Search";
 import CourseCard from "../CourseCard/CourseCard";
 import { CoursesService } from "../../services/courses.service";
 import Button from "../Button/Button";
+import PropTypes from 'prop-types';
 
+const Courses = () => {
+    const [courses, setCourses] = useState([]);
+    const [filteredData, setFilteredData] = useState([]);
 
-export default class Courses extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { courses: [], filteredData: [] };
-        this.onSearchCourses = this.onSearchCourses.bind(this);
-    }
-
-    componentDidMount() {
-        const courses = CoursesService.getAllCourses();
-        this.setState({
-            courses: courses
-        });
-    }
-
-    onSearchCourses(searchTerm) {
-        const results = this.state.courses.filter(course =>
-            course.id.toLowerCase().includes(searchTerm.toLowerCase()) || course.title.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-        if (results.length){
-            this.setState({ 
-                filteredData: results 
-            })
+    useEffect(() => {
+        async function fetchData() {
+            const response = await CoursesService.getAllCourses();
+            setCourses(response);
         }
-    }
+        fetchData();
+    }, []);
 
-    render() {
-        return (
-            <div className="search-new-course-panel">
-                <Search courses={this.state.courses} onSearchCourses={this.onSearchCourses} />
-                <Button name="Add new course" class="main-button new-course" path="/newCourse" />
-                <div>
-                    {this.state.filteredData.length ? this.state.filteredData.map(course => <CourseCard key={course.id} course={course}/>)
-                                       : this.state.courses.map(course => <CourseCard key={course.id} course={course}/>)}
-                </div>
+    const onSearchCourses = (searchTerm) => {
+        const results = courses.filter(
+            (course) =>
+                course.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                course.title.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        if (results.length) {
+            setFilteredData(results);
+        }
+    };
+
+    return (
+        <div className="search-new-course-panel">
+            <Search courses={courses} onSearchCourses={onSearchCourses} />
+            <Button
+                name="Add new course"
+                class="main-button new-course"
+                path="/courses/add"
+            />
+            <div>
+                {filteredData.length
+                    ? filteredData.map((course) => (
+                        <CourseCard key={course.id} course={course} />
+                    ))
+                    : courses.map((course) => (
+                        <CourseCard key={course.id} course={course} />
+                    ))}
             </div>
-        )
-    }
+        </div>
+    );
+};
+
+Courses.propTypes = {
+    courses : PropTypes.array,
+    filteredData: PropTypes.array
 }
+
+export default Courses;

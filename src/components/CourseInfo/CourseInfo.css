@@ -1,0 +1,56 @@
+.course-info-block {
+    display: flex;
+    justify-content: center;
+}
+
+.link-back {
+    display: flex;
+    margin-left: 70px;
+    color: black;
+}
+
+.title-info {
+    justify-content: center;
+    display: flex;
+}
+
+.left-info {
+    display: flex;
+    min-width: 600px;
+    width: 70%;
+    flex-direction: column;
+}
+
+.description-block {
+    display: flex;
+    min-width: 600px;
+    align-self: center;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.right-info {
+    display: flex;
+    width: 30%;
+    flex-direction: column;
+    margin-top: 85px;
+} 
+
+.title-course-info {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.info-row {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+}
+
+.authors-line {
+    width: 300px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
+    overflow: hidden;
+}

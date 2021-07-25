@@ -1,26 +1,60 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation, useHistory } from "react-router-dom";
 import { UserService } from "../../services/user.service";
-import './User.css';
+import Button from "../Button/Button";
+import "./User.css";
+import { Link } from "react-router-dom";
+import PropTypes, { func } from "prop-types";
 
-export default class Header extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { user: {} };
-    }
+const User = (props) => {
+    const [user, setUser] = useState({});
+    const [isAuthUrl, checkUrl] = useState(false);
+    const location = useLocation();
+    const history = useHistory();
 
-    componentDidMount() {
-        const user = UserService.getUser();
-
-        this.setState({
-            user: user
-        });
-    }
-
-    render() {
-        return (
-            <div className="user">
-                { this.state.user.firstName }
-            </div>
+    useEffect(() => {
+        checkUrl(
+            location.pathname === "/login" || location.pathname === "/registration"
         );
+    }, [location]);
+
+    useEffect(() => {
+        async function fetchData() {
+            const user = await UserService.getCurrentUser();
+            setUser(user);
+        }
+        fetchData();
+    },[])
+
+    function onLogout(e) {
+        e.preventDefault();
+        UserService.removeToken();
     }
-}
+
+    return (
+        <div className="user">
+            {!isAuthUrl && (
+                <div>
+                    {user ? (
+                        <div className="user-block">
+                            <span>{user.name}</span>
+                            <Link onClick={onLogout} to="/login" className="decoration">
+                                <Button name="Logout" class="main-button" path="/login" />
+                            </Link>
+                        </div>
+                    ) : (
+                            <Button name="Login" class="main-button" path="/login" />
+                        )}
+                </div>
+            )}
+        </div>
+    );
+};
+
+User.propTypes = {
+    user: PropTypes.object,
+    isAuthUrl: PropTypes.bool,
+    location: PropTypes.object,
+};
+
+export default User;

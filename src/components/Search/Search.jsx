@@ -1,35 +1,38 @@
-import './Search.css';
-import React from "react";
+import "./Search.css";
+import React, { useState } from "react";
 import Button from "../Button/Button";
+import PropTypes from 'prop-types';
 
-class Search extends React.Component {
+const Search = (props) => {
+    const [searchTerm, setSearchTerm] = useState("");
 
-    constructor(props) {
-        super(props);
-        this.state = { searchTerm: "" };
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    handleChange(e) {
+    const handleChange = (e) => {
         e.preventDefault();
         const searchTerm = e.target.value;
-        this.setState({ searchTerm: searchTerm });
+        setSearchTerm(searchTerm);
     };
 
-    handleSubmit(e) {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        this.props.onSearchCourses(this.state.searchTerm);
-    }
+        props.onSearchCourses(searchTerm);
+    };
 
-    render() {
-        return (
-            <form onSubmit={this.handleSubmit} className="search-form">
-                <input className="search-input" type="text" value={this.state.searchTerm} onChange={this.handleChange} placeholder="Enter course name for searching..." />
-                <Button name="Search" class="search-button" />
-            </form>
-        )
-    }
+    return (
+        <form onSubmit={handleSubmit} className="search-form">
+            <input
+                className="search-input"
+                type="text"
+                value={searchTerm}
+                onChange={handleChange}
+                placeholder="Enter course name for searching..."
+            />
+            <Button name="Search" class="search-button" />
+        </form>
+    );
+};
+
+Search.propTypes = {
+    searchTerm: PropTypes.string
 }
 
 export default Search;
