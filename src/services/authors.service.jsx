@@ -1,39 +1,36 @@
-const mockedAuthorsList = [
-    {
-        id: '27cc3006-e93a-4748-8ca8-73d06aa93b6d',
-        name: 'Vasiliy Dobkin'
-    },
-    {
-        id: 'f762978b-61eb-4096-812b-ebde22838167',
-        name: 'Nicolas Kim'
-    },
-    {
-        id: 'df32994e-b23d-497c-9e4d-84e4dc02882f',
-        name: 'Anna Sidorenko'
-    },
-    {
-        id: '095a1817-d45b-4ed7-9cf7-b2417bcbf748',
-        name: 'Valentina Larina'
-    },
-];
-
+import { UserService } from './user.service';
 export const AuthorsService = {
 
-    getAllNamesOfAuthors() {
-        return mockedAuthorsList.map(item => item.name);
+    async getAllAuthors() {
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        };
+        return await fetch('http://localhost:3000/authors/all', requestOptions)
+                           .then(res => res.json()).then(data => data.result);
     },
 
-    getAllAuthors() {
-        return mockedAuthorsList;
+    async getAuthorById(id) {
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        };
+        const json = await fetch('http://localhost:3000/authors/' + id, requestOptions)
+                           .then(res => res.json()).then(data => data.result);
+        return json;
     },
 
-    getAuthorById(id) {
-        return mockedAuthorsList.find(item => item.id === id);
-    },
-
-    addAuthorToList(author) {
-        mockedAuthorsList.push(author);
-        return mockedAuthorsList;
+    async addAuthorToList(authorName) {
+        const authToken = UserService.getToken();
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json',
+                        'Authorization': authToken  },
+            body: JSON.stringify({ name: authorName })
+        };
+        const json = await fetch('http://localhost:3000/authors/add', requestOptions)
+                           .then(res => res.json()).then(data => data.result);
+        return json;
     }
 
 }

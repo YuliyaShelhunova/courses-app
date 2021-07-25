@@ -4,3 +4,11 @@
     align-self: center;
     margin-left: auto;
 }
+
+.user-block {
+    display: flex;
+}
+
+.decoration {
+    text-decoration: none;
+}

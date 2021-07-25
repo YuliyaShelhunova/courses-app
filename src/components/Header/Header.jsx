@@ -1,18 +1,15 @@
-import './Header.css';
+import "./Header.css";
 import React from "react";
 import Logo from "../Logo/Logo";
-import Button from "../Button/Button"
-import User from "../User/User"
+import User from "../User/User";
 
-export default class Header extends React.Component {
+const Header = () => {
+    return (
+        <header className="header">
+            <Logo />
+            <User />
+        </header>
+    );
+};
 
-    render() {
-        return (
-            <header className="header">
-                <Logo />
-                <User />
-                <Button name="Logout" class="main-button" />
-            </header>
-        );
-    }
-}
+export default Header;

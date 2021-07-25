@@ -1,0 +1,30 @@
+.login {
+    display: flex;
+    justify-content: center;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-block {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.input-block {
+    display: flex;
+    margin-bottom: 20px;
+    flex-direction: column;
+}
+
+.header-title {
+    justify-content: center;
+    display: flex;
+}
+
+.registration-link {
+    font-size: small;
+}

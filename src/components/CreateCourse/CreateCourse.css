@@ -38,7 +38,7 @@
     justify-content: center;
 }
 
-.description-block {
+.description-block-creating {
     height: 100%;
     display: flex;
     flex-direction: column;
