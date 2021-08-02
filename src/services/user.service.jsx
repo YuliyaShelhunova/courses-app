@@ -1,6 +1,7 @@
 export const UserService = {
     saveToken(authToken) {
         window.localStorage.setItem('authToken', authToken);
+        return authToken;
     },
 
     getToken() {
@@ -14,16 +15,23 @@ export const UserService = {
         window.localStorage.removeItem('authToken');
     },
 
+    logout() {
+        this.removeToken();
+        return true;
+    },
+
     async getCurrentUser() {
         const authToken = this.getToken();
         const requestOptions = {
             method: 'GET',
-            headers: { 'Content-Type': 'application/json',
-                        'Authorization': authToken }
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': authToken
+            }
         };
         const json = await fetch('http://localhost:3000/users/me', requestOptions)
-                    .then(res => res.json())
-                    .then(data => data.result);
+            .then(res => res.json())
+            .then(data => data.result);
 
         return json;
     },
@@ -35,9 +43,9 @@ export const UserService = {
             body: JSON.stringify(data)
         };
         const json = await fetch('http://localhost:3000/login', requestOptions)
-                    .then(res => res.json())
-                    .then(data => this.saveToken(data.result))
-                    .catch(() => "Error");
+            .then(res => res.json())
+            .then(data => this.saveToken(data.result))
+            .catch(() => "Error");
         return json;
     },
 
@@ -48,9 +56,9 @@ export const UserService = {
             body: JSON.stringify(data)
         };
         const response = await fetch('http://localhost:3000/register', requestOptions)
-                                .then(res => res.json())
-                                .then(data => data.result)
-                                .catch(() => "Error");
+            .then(res => res.json())
+            .then(data => data.result)
+            .catch(() => "Error");
         return response;
 
     }

@@ -1,12 +1,13 @@
 import "./CreateCourse.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Button from "../Button/Button";
-import { AuthorsService } from "../../services/authors.service";
-import { CoursesService } from "../../services/courses.service";
 import { Utils } from "../../Utils/Utils";
 import PropTypes from 'prop-types';
+import { connect, ReactReduxContext } from 'react-redux';
+import * as authorsActions from '../../store/authors/authors.action';
+import * as coursesActions from '../../store/courses/courses.action';
 
-const CreateCourse = (props) => {
+const CreateCourse = ({ authors }) => {
     const [newCourse, changedNewCourse] = useState({
         title: "",
         description: "",
@@ -14,35 +15,33 @@ const CreateCourse = (props) => {
         duration: 0,
         authors: [],
     });
-    const [authors, setAuthors] = useState([]);
+    const [authorsList, setAuthors] = useState([]);
     const [authorName, setAuthorName] = useState("");
     const [selectedAuthors, pushSelectedAuthors] = useState([]);
+    const { store } = useContext(ReactReduxContext);
 
     useEffect(() => {
-        async function fetchData() {
-            const response = await AuthorsService.getAllAuthors();
-            setAuthors(response);
-        }
-        fetchData();
-    }, []);
+        store.dispatch(authorsActions.getAllAuthors());
+    }, [store]);
+
+    useEffect(() => {
+        setAuthors(authors);
+    }, [authors]);
 
     const onCreateAuthor = (e) => {
         e.preventDefault();
         if (authorName.length > 2) {
-            AuthorsService.addAuthorToList(authorName).then((author) => {
-                setAuthors(authors.concat(author));
-                setAuthorName("");
-            });
+            store.dispatch(authorsActions.addAuthor(authorName));
         }
     };
 
     const onAddAuthor = (e) => {
         e.preventDefault();
         const authorId = e.target.name;
-        const author = authors.find((item) => item.id === authorId);
+        const author = authorsList.find((item) => item.id === authorId);
         if (!selectedAuthors.find((item) => item.id === author.id)) {
             authors.splice(
-                authors.findIndex((item) => item.id === authorId),
+                authorsList.findIndex((item) => item.id === authorId),
                 1
             );
             pushSelectedAuthors(selectedAuthors.concat(author));
@@ -57,7 +56,7 @@ const CreateCourse = (props) => {
             selectedAuthors.findIndex((item) => item.id === authorId),
             1
         );
-        setAuthors(authors.concat(author));
+        setAuthors(authorsList.concat(author));
     };
 
     const onNameChange = (e) => {
@@ -100,15 +99,14 @@ const CreateCourse = (props) => {
             newCourse.duration &&
             !!selectedAuthors.length
         ) {
-            CoursesService.addCourseToList({
+            const course = {
                 title: newCourse.title,
                 description: newCourse.description,
                 creationDate: Utils.generateCurrentDate(),
                 duration: newCourse.duration,
                 authors: selectedAuthors.map(item => item.id),
-            }).then(() => {
-                props.history.push("/");
-            });
+            };
+            store.dispatch(coursesActions.addCourse(course));
         } else {
             alert("Please, fill in all fields");
         }
@@ -167,7 +165,7 @@ const CreateCourse = (props) => {
                     </div>
                     <div className="right-block">
                         <div className="title-for-creation">Authors</div>
-                        {authors.map((author) => (
+                        {authorsList.map((author) => (
                             <form key={author.id} name={author.id} onSubmit={onAddAuthor}>
                                 <div className="author-existing-block" key={author.id}>
                                     <span key={author.name} className="author-name">
@@ -229,7 +227,7 @@ const CreateCourse = (props) => {
 };
 
 CreateCourse.propTypes = {
-    newCourse : PropTypes.shape({
+    newCourse: PropTypes.shape({
         title: PropTypes.string,
         description: PropTypes.string,
         authors: PropTypes.array,
@@ -241,4 +239,15 @@ CreateCourse.propTypes = {
     selectedAuthors: PropTypes.array
 }
 
-export default CreateCourse;
+const mapStateToProps = (state, props) => {
+    if (state.courses.redirectTo) {
+        props.history.push(state.courses.redirectTo);
+        state.courses.redirectTo = undefined;
+    }
+
+    return {
+        authors: state.authors.list
+    };
+}
+
+export default connect(mapStateToProps)(CreateCourse);

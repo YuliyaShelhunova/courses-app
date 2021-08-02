@@ -1,0 +1,4 @@
+export const GET_ALL_AUTHORS = 'GET_ALL_AUTHORS';
+export const GET_AUTHOR_BY_ID = 'GET_AUTHOR_BY_ID';
+export const ADD_AUTHOR_TO_LIST = 'ADD_AUTHOR_TO_LIST';
+export const DELETE_AUTHOR = 'DELETE_AUTHOR';

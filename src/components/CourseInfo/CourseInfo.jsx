@@ -1,22 +1,17 @@
 import "./CourseInfo.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useContext } from "react";
 import { Utils } from "./../../Utils/Utils";
-import { CoursesService } from "../../services/courses.service";
 import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
+import { connect, ReactReduxContext } from 'react-redux';
+import * as actions from '../../store/courses/courses.action';
 
-const CourseInfo = (props) => {
-    const [course, setCourse] = useState({});
+const CourseInfo = ({ currentCourse, match }) => {
+    const { store } = useContext(ReactReduxContext);
 
     useEffect(() => {
-        async function fetchData() {
-            const response = await CoursesService.getCourseById(
-                props.match?.params?.id
-            );
-            setCourse(response);
-        }
-        fetchData();
-    }, [props.match?.params?.id]);
+        store.dispatch(actions.getCourseById(match?.params?.id));
+    }, [match?.params?.id, store]);
 
     return (
         <div>
@@ -27,26 +22,26 @@ const CourseInfo = (props) => {
             </div>
             <div className="course-info-block">
                 <div className="left-info">
-                    <h1 className="title-info">{course?.title} </h1>
-                    <div className="description-block">{course?.description}</div>
+                    <h1 className="title-info">{currentCourse?.title} </h1>
+                    <div className="description-block">{currentCourse?.description}</div>
                 </div>
                 <div className="right-info">
                     <div className="info-row">
                         <span className="title-course-info">ID: </span>
-                        <span className="authors-line">{course?.id}</span>
+                        <span className="authors-line">{currentCourse?.id}</span>
                     </div>
                     <div className="info-row">
                         <div className="title-course-info">Duration: </div>
-                        {Utils.timeFormatter(course?.duration)}
+                        {Utils.timeFormatter(currentCourse?.duration)}
                     </div>
                     <div className="info-row">
                         <div className="title-course-info">Created: </div>
-                        {Utils.dateFormatter(course?.creationDate)}
+                        {Utils.dateFormatter(currentCourse?.creationDate)}
                     </div>
                     <div className="info-row">
                         <span className="title-course-info">Authors: </span>
                         <span className="authors-line">
-                            {course.authors?.map((author) => (
+                            {currentCourse.authors?.map((author) => (
                                 <span key={author.id}> {author.name} </span>
                             ))}
                         </span>
@@ -68,4 +63,10 @@ CourseInfo.propTypes = {
     })
 }
 
-export default CourseInfo;
+const mapStateToProps = (state) => {
+    return {
+        currentCourse: state.courses.currentCourse
+    };
+}
+
+export default connect(mapStateToProps)(CourseInfo);

@@ -1,12 +1,14 @@
 import "./Login.css";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Button from "../Button/Button";
-import { UserService } from "../../services/user.service";
 import PropTypes from 'prop-types';
+import { connect, ReactReduxContext } from 'react-redux';
+import * as userActions from '../../store/user/user.action';
 
-const Login = (props) => {
+const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const { store } = useContext(ReactReduxContext);
 
     const onEmailChange = (e) => {
         e.preventDefault();
@@ -24,11 +26,7 @@ const Login = (props) => {
         e.preventDefault();
         if (email && password) {
             const data = { email: email, password: password };
-            UserService.loginUser(data)
-                .then((data) => {
-                    props.history.push("/");
-                })
-                .catch((error) => alert(error));
+            store.dispatch(userActions.login(data));
         }
     };
 
@@ -76,4 +74,14 @@ Login.propTypes = {
     password: PropTypes.string
 }
 
-export default Login;
+const mapStateToProps = (state, props) => {
+    if (state.user.redirectTo) {
+        props.history.push(state.user.redirectTo);
+        state.user.redirectTo = undefined;
+    }
+    return {
+        isAuth: state.user.isAuth
+    };
+}
+
+export default connect(mapStateToProps)(Login);

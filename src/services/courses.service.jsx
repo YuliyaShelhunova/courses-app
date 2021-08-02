@@ -1,5 +1,6 @@
 import { AuthorsService } from './authors.service';
 import { UserService } from './user.service';
+
 export const CoursesService = {
 
     async getAllCourses() {
@@ -9,7 +10,7 @@ export const CoursesService = {
         return await json
             .map(course => {
                 const authors = course.authors.map(id => allAuthors.find(item => item.id === id));
-                const updatedCourse = {...course, authors: authors};
+                const updatedCourse = { ...course, authors: authors };
                 return updatedCourse;
             });
     },
@@ -20,7 +21,20 @@ export const CoursesService = {
             headers: { 'Content-Type': 'application/json' },
         };
         return await fetch('http://localhost:3000/courses/all', requestOptions)
-                           .then(res => res.json()).then(data => data.result);
+            .then(res => res.json()).then(data => data.result);
+    },
+
+    async deleteCourseSync(id) {
+        const authToken = UserService.getToken();
+        const requestOptions = {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': authToken
+            },
+        };
+        return await fetch('http://localhost:3000/courses/' + id, requestOptions)
+            .then(res => res.json()).then(data => data.result);
     },
 
     async getCourseById(id) {
@@ -28,9 +42,9 @@ export const CoursesService = {
             method: 'GET'
         };
         const json = await fetch('http://localhost:3000/courses/' + id, requestOptions)
-                           .then(res => res.json()).then(data => data.result);
+            .then(res => res.json()).then(data => data.result);
         const authors = json.authors.map(async authorId => await AuthorsService.getAuthorById(authorId));
-        const updatedCourse = {...json, authors: authors};
+        const updatedCourse = { ...json, authors: authors };
         return updatedCourse;
     },
 
@@ -38,12 +52,14 @@ export const CoursesService = {
         const authToken = UserService.getToken();
         const requestOptions = {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json',
-                        'Authorization': authToken },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': authToken
+            },
             body: JSON.stringify(course)
         };
         const json = await fetch('http://localhost:3000/courses/add', requestOptions)
-                           .then(res => res.json()).then(data => data.result);
+            .then(res => res.json()).then(data => data.result);
 
         return json;
     }

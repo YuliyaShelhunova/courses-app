@@ -30,3 +30,8 @@
     display: block;
     overflow: hidden;
 }
+
+.block-change {
+    display: flex;
+    flex-direction: row;
+}
