@@ -1,13 +1,15 @@
 import "./Registration.css";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Button from "../Button/Button";
-import { UserService } from "../../services/user.service";
 import PropTypes from 'prop-types';
+import { connect, ReactReduxContext } from 'react-redux';
+import * as userActions from '../../store/user/user.action';
 
-const Registration = (props) => {
+const Registration = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
+    const { store } = useContext(ReactReduxContext);
 
     const onEmailChange = (e) => {
         e.preventDefault();
@@ -29,12 +31,8 @@ const Registration = (props) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const data = { name: name, email: email, password: password};
-        UserService.registerUser(data)
-            .then((data) => {
-                props.history.push("/login");
-            })
-            .catch((error) => alert(error));
+        const data = { name: name, email: email, password: password };
+        store.dispatch(userActions.register(data));
     };
 
     return (
@@ -91,4 +89,14 @@ Registration.propTypes = {
     password: PropTypes.string
 }
 
-export default Registration;
+const mapStateToProps = (state, props) => {
+    if (state.user.redirectTo) {
+        props.history.push(state.user.redirectTo);
+        state.user.redirectTo = undefined;
+    }
+    return {
+        isAuth: state.user.isAuth
+    };
+}
+
+export default connect(mapStateToProps)(Registration);

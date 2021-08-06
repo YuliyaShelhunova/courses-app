@@ -1,22 +1,19 @@
 import "./Courses.css";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Search from "../Search/Search";
 import CourseCard from "../CourseCard/CourseCard";
-import { CoursesService } from "../../services/courses.service";
 import Button from "../Button/Button";
 import PropTypes from 'prop-types';
+import { connect, ReactReduxContext } from 'react-redux';
+import * as actions from '../../store/courses/courses.action';
 
-const Courses = () => {
-    const [courses, setCourses] = useState([]);
+const Courses = ({ courses }) => {
     const [filteredData, setFilteredData] = useState([]);
+    const { store } = useContext(ReactReduxContext);
 
     useEffect(() => {
-        async function fetchData() {
-            const response = await CoursesService.getAllCourses();
-            setCourses(response);
-        }
-        fetchData();
-    }, []);
+        store.dispatch(actions.getAllCourses());
+    }, [store]);
 
     const onSearchCourses = (searchTerm) => {
         const results = courses.filter(
@@ -51,8 +48,14 @@ const Courses = () => {
 };
 
 Courses.propTypes = {
-    courses : PropTypes.array,
+    courses: PropTypes.array,
     filteredData: PropTypes.array
 }
 
-export default Courses;
+const mapStateToProps = (state) => {
+    return {
+        courses: state.courses.list
+    };
+}
+
+export default connect(mapStateToProps)(Courses);

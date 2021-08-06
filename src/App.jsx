@@ -8,9 +8,8 @@ import React from "react";
 import { Route, Switch, BrowserRouter as Router, Redirect } from "react-router-dom";
 import CourseInfo from "./components/CourseInfo/CourseInfo";
 
-export default class App extends React.Component {
+const App = () => {
 
-  render() {
     return (
       <div>
         <Router>
@@ -21,12 +20,13 @@ export default class App extends React.Component {
               <Route path="/registration" component={Registration} />
               <Redirect exact from="/" to="/courses" />
               <Route exact path="/courses" component={Courses} />
-              <Route path="/courses/add" component={CreateCourse} />
-              <Route path="/courses/:id" component={CourseInfo} />
+              <Route path="/courses/add" component={CreateCourse}/>
+              <Route path="/courses/:id" component={CourseInfo}/>
             </Switch>
           </div>
         </Router>
       </div>
     );
-  }
 }
+
+export default App;

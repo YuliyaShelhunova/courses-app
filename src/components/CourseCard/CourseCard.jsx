@@ -1,11 +1,20 @@
 import "./CourseCard.css";
-import React from "react";
+import React, { useContext } from "react";
 import Button from "../Button/Button";
 import { Utils } from "./../../Utils/Utils";
 import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
+import { connect, ReactReduxContext } from 'react-redux';
+import * as actions from '../../store/courses/courses.action';
 
 const CourseCard = (props) => {
+    const { store } = useContext(ReactReduxContext);
+
+    const onRemoveCourse = (e) => {
+        e.preventDefault();
+        store.dispatch(actions.deleteCourse(props.course.id));
+    };
+
     return (
         <div className="course-block">
             <div className="left">
@@ -29,9 +38,14 @@ const CourseCard = (props) => {
                     <div className="title">Duration: </div>
                     {Utils.timeFormatter(props.course.duration)}
                 </div>
-                <div>
+                <div className="block-change">
                     <Link to={`/courses/${props.course.id}`}>
                         <Button type="submit" name="Show course" />
+                    </Link>
+
+                    <Button type="submit" name="Edit" />
+                    <Link to='/courses' onClick={onRemoveCourse}>
+                        <Button type="submit" name="Delete" />
                     </Link>
                 </div>
             </div>
@@ -40,7 +54,7 @@ const CourseCard = (props) => {
 };
 
 CourseCard.propTypes = {
-    course : PropTypes.shape({
+    course: PropTypes.shape({
         title: PropTypes.string,
         description: PropTypes.string,
         authors: PropTypes.array,
@@ -50,4 +64,4 @@ CourseCard.propTypes = {
     })
 }
 
-export default CourseCard;
+export default connect(null)(CourseCard);

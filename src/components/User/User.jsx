@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { useLocation, useHistory } from "react-router-dom";
-import { UserService } from "../../services/user.service";
+import React, { useState, useEffect, useContext } from "react";
+import { useLocation } from "react-router-dom";
 import Button from "../Button/Button";
 import "./User.css";
 import { Link } from "react-router-dom";
-import PropTypes, { func } from "prop-types";
+import PropTypes from "prop-types";
+import { connect, ReactReduxContext } from 'react-redux';
+import * as userActions from '../../store/user/user.action';
 
-const User = (props) => {
-    const [user, setUser] = useState({});
+const User = ({ user }) => {
     const [isAuthUrl, checkUrl] = useState(false);
     const location = useLocation();
-    const history = useHistory();
+    const { store } = useContext(ReactReduxContext);
 
     useEffect(() => {
         checkUrl(
@@ -19,23 +19,19 @@ const User = (props) => {
     }, [location]);
 
     useEffect(() => {
-        async function fetchData() {
-            const user = await UserService.getCurrentUser();
-            setUser(user);
-        }
-        fetchData();
-    },[])
+        store.dispatch(userActions.getCurrentUser());
+    }, [store])
 
     function onLogout(e) {
         e.preventDefault();
-        UserService.removeToken();
+        store.dispatch(userActions.logout(true));
     }
 
     return (
         <div className="user">
             {!isAuthUrl && (
                 <div>
-                    {user ? (
+                    {user.isAuth ? (
                         <div className="user-block">
                             <span>{user.name}</span>
                             <Link onClick={onLogout} to="/login" className="decoration">
@@ -57,4 +53,10 @@ User.propTypes = {
     location: PropTypes.object,
 };
 
-export default User;
+const mapStateToProps = (state) => {
+    return {
+        user: state.user
+    };
+}
+
+export default connect(mapStateToProps)(User);
