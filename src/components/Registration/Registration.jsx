@@ -1,9 +1,9 @@
 import "./Registration.css";
 import React, { useState, useContext } from "react";
 import Button from "../Button/Button";
-import PropTypes from 'prop-types';
-import { connect, ReactReduxContext } from 'react-redux';
-import * as userActions from '../../store/user/user.action';
+import PropTypes from "prop-types";
+import { connect, ReactReduxContext } from "react-redux";
+import * as thunk from "../../store/user/thunk";
 
 const Registration = () => {
     const [email, setEmail] = useState("");
@@ -32,7 +32,7 @@ const Registration = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const data = { name: name, email: email, password: password };
-        store.dispatch(userActions.register(data));
+        store.dispatch(thunk.register(data));
     };
 
     return (
@@ -86,8 +86,8 @@ const Registration = () => {
 Registration.propTypes = {
     name: PropTypes.string,
     email: PropTypes.string,
-    password: PropTypes.string
-}
+    password: PropTypes.string,
+};
 
 const mapStateToProps = (state, props) => {
     if (state.user.redirectTo) {
@@ -95,8 +95,8 @@ const mapStateToProps = (state, props) => {
         state.user.redirectTo = undefined;
     }
     return {
-        isAuth: state.user.isAuth
+        isAuth: state.user.isAuth,
     };
-}
+};
 
 export default connect(mapStateToProps)(Registration);

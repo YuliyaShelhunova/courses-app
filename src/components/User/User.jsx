@@ -4,8 +4,8 @@ import Button from "../Button/Button";
 import "./User.css";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { connect, ReactReduxContext } from 'react-redux';
-import * as userActions from '../../store/user/user.action';
+import { connect, ReactReduxContext } from "react-redux";
+import * as thunk from "../../store/user/thunk";
 
 const User = ({ user }) => {
     const [isAuthUrl, checkUrl] = useState(false);
@@ -19,12 +19,12 @@ const User = ({ user }) => {
     }, [location]);
 
     useEffect(() => {
-        store.dispatch(userActions.getCurrentUser());
-    }, [store])
+        store.dispatch(thunk.getCurrentUser());
+    }, [store]);
 
     function onLogout(e) {
         e.preventDefault();
-        store.dispatch(userActions.logout(true));
+        store.dispatch(thunk.logout(true));
     }
 
     return (
@@ -55,8 +55,8 @@ User.propTypes = {
 
 const mapStateToProps = (state) => {
     return {
-        user: state.user
+        user: state.user,
     };
-}
+};
 
 export default connect(mapStateToProps)(User);

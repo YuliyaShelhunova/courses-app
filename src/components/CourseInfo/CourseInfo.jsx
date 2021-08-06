@@ -2,15 +2,15 @@ import "./CourseInfo.css";
 import React, { useEffect, useContext } from "react";
 import { Utils } from "./../../Utils/Utils";
 import { Link } from "react-router-dom";
-import PropTypes from 'prop-types';
-import { connect, ReactReduxContext } from 'react-redux';
-import * as actions from '../../store/courses/courses.action';
+import PropTypes from "prop-types";
+import { connect, ReactReduxContext } from "react-redux";
+import * as thunk from "../../store/courses/thunk";
 
 const CourseInfo = ({ currentCourse, match }) => {
     const { store } = useContext(ReactReduxContext);
 
     useEffect(() => {
-        store.dispatch(actions.getCourseById(match?.params?.id));
+        store.dispatch(thunk.getCourseById(match?.params?.id));
     }, [match?.params?.id, store]);
 
     return (
@@ -18,7 +18,7 @@ const CourseInfo = ({ currentCourse, match }) => {
             <div>
                 <Link to="/courses" className="link-back">
                     Back to courses
-                </Link>
+        </Link>
             </div>
             <div className="course-info-block">
                 <div className="left-info">
@@ -59,14 +59,14 @@ CourseInfo.propTypes = {
         authors: PropTypes.array,
         creationDate: PropTypes.string,
         duration: PropTypes.number,
-        id: PropTypes.number.isRequired
-    })
-}
+        id: PropTypes.number.isRequired,
+    }),
+};
 
 const mapStateToProps = (state) => {
     return {
-        currentCourse: state.courses.currentCourse
+        currentCourse: state.courses.currentCourse,
     };
-}
+};
 
 export default connect(mapStateToProps)(CourseInfo);

@@ -37,13 +37,28 @@ export const CoursesService = {
             .then(res => res.json()).then(data => data.result);
     },
 
+    async updateCourseSync(id, course) {
+        const authToken = UserService.getToken();
+        const requestOptions = {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': authToken
+            },
+            body: JSON.stringify(course)
+        };
+        return await fetch('http://localhost:3000/courses/' + id, requestOptions)
+            .then(res => res.json()).then(data => data.result);
+    },
+
     async getCourseById(id) {
         const requestOptions = {
             method: 'GET'
         };
+        const allAuthors = await AuthorsService.getAllAuthors();
         const json = await fetch('http://localhost:3000/courses/' + id, requestOptions)
             .then(res => res.json()).then(data => data.result);
-        const authors = json.authors.map(async authorId => await AuthorsService.getAuthorById(authorId));
+        const authors = json.authors.map(authorId => allAuthors.find(item => item.id === authorId));
         const updatedCourse = { ...json, authors: authors };
         return updatedCourse;
     },

@@ -3,16 +3,16 @@ import React, { useState, useEffect, useContext } from "react";
 import Search from "../Search/Search";
 import CourseCard from "../CourseCard/CourseCard";
 import Button from "../Button/Button";
-import PropTypes from 'prop-types';
-import { connect, ReactReduxContext } from 'react-redux';
-import * as actions from '../../store/courses/courses.action';
+import PropTypes from "prop-types";
+import { connect, ReactReduxContext } from "react-redux";
+import * as thunk from "../../store/courses/thunk";
 
 const Courses = ({ courses }) => {
     const [filteredData, setFilteredData] = useState([]);
     const { store } = useContext(ReactReduxContext);
 
     useEffect(() => {
-        store.dispatch(actions.getAllCourses());
+        store.dispatch(thunk.getAllCourses());
     }, [store]);
 
     const onSearchCourses = (searchTerm) => {
@@ -49,13 +49,13 @@ const Courses = ({ courses }) => {
 
 Courses.propTypes = {
     courses: PropTypes.array,
-    filteredData: PropTypes.array
-}
+    filteredData: PropTypes.array,
+};
 
 const mapStateToProps = (state) => {
     return {
-        courses: state.courses.list
+        courses: state.courses.list,
     };
-}
+};
 
 export default connect(mapStateToProps)(Courses);

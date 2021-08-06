@@ -1,7 +1,7 @@
 import "./Search.css";
 import React, { useState } from "react";
 import Button from "../Button/Button";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
 const Search = (props) => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -32,7 +32,7 @@ const Search = (props) => {
 };
 
 Search.propTypes = {
-    searchTerm: PropTypes.string
-}
+    searchTerm: PropTypes.string,
+};
 
 export default Search;
