@@ -23,7 +23,7 @@ const App = () => {
               <Route exact path="/courses" component={Courses} />
               <PrivateRouter path="/courses/add" component={CourseForm}/>
               <PrivateRouter path="/courses/update/:id" component={CourseForm} />
-              <PrivateRouter path="/courses/:id" component={CourseInfo}/>
+              <Route path="/courses/:id" component={CourseInfo}/>
             </Switch>
           </div>
         </Router>

@@ -13,7 +13,7 @@ const CourseForm = ({ authors, isAdmin, course, match }) => {
         description: course.description,
         creationDate: course.creationDate,
         duration: course.duration,
-        authors: course.authors
+        authors: course.authors,
     });
     const [authorsList, setAuthors] = useState([]);
     const [authorName, setAuthorName] = useState("");
@@ -33,7 +33,7 @@ const CourseForm = ({ authors, isAdmin, course, match }) => {
 
     const addAuthors = useCallback(
         (addedAuthors) => {
-            let selectedItems = []
+            let selectedItems = [];
             addedAuthors.forEach((author) => {
                 if (!selectedItems.find((item) => item.id === author.id)) {
                     authors.splice(
@@ -134,8 +134,9 @@ const CourseForm = ({ authors, isAdmin, course, match }) => {
                 duration: newCourse.duration,
                 authors: selectedAuthors.map((item) => item.id),
             };
-            isUpdate ? store.dispatch(coursesThunk.updateCourse(course.id, courseToSend))
-                     : store.dispatch(coursesThunk.addCourse(courseToSend));
+            isUpdate
+                ? store.dispatch(coursesThunk.updateCourse(course.id, courseToSend))
+                : store.dispatch(coursesThunk.addCourse(courseToSend));
         } else {
             alert("Please, fill in all fields");
         }
@@ -157,8 +158,11 @@ const CourseForm = ({ authors, isAdmin, course, match }) => {
                         </div>
 
                         <div className="right-side">
-                            {isAdmin ? <Button name={nameButton} class="main-button" type="submit" />
-                                     : <div></div>}
+                            {isAdmin ? (
+                                <Button name={nameButton} class="main-button" type="submit" />
+                            ) : (
+                                    <div></div>
+                                )}
                         </div>
                     </div>
                     <div className="description-block-creating">

@@ -8,21 +8,23 @@ const PrivateRouter = ({ component, isAdmin, isAuth, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={ props =>
+      render={(props) => (
         <div>
-        { !isAuth ? (<Redirect to="/login" />) 
-                  : isAdmin
-                  ? (<ComponentToRender {...props} />)
-                  : (<Redirect to="/courses" />)
-        }
+          {!isAuth ? (
+            <Redirect to="/login" />
+          ) : isAdmin ? (
+            <ComponentToRender {...props} />
+          ) : (
+            <Redirect to="/courses" />
+          )}
         </div>
-      }
+      )}
     />
   );
 };
 
-const mapStateToProps = (state, ownProps) => ({ 
-    isAdmin: state.user.isAdmin,
-    isAuth: state.user.isAuth
+const mapStateToProps = (state, ownProps) => ({
+  isAdmin: state.user.isAdmin,
+  isAuth: state.user.isAuth,
 });
 export default withRouter(connect(mapStateToProps)(PrivateRouter));

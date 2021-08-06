@@ -1,9 +1,9 @@
 import "./Login.css";
 import React, { useState, useContext } from "react";
 import Button from "../Button/Button";
-import PropTypes from 'prop-types';
-import { connect, ReactReduxContext } from 'react-redux';
-import * as thunk from '../../store/user/thunk';
+import PropTypes from "prop-types";
+import { connect, ReactReduxContext } from "react-redux";
+import * as thunk from "../../store/user/thunk";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -38,7 +38,7 @@ const Login = () => {
                     <div className="login-form">
                         <div className="input-block">
                             Email
-                            <input
+              <input
                                 type="text"
                                 value={email}
                                 onChange={onEmailChange}
@@ -47,7 +47,7 @@ const Login = () => {
                         </div>
                         <div className="input-block">
                             Password
-                            <input
+              <input
                                 type="text"
                                 value={password}
                                 onChange={onPasswordChange}
@@ -71,8 +71,8 @@ const Login = () => {
 
 Login.propTypes = {
     email: PropTypes.string,
-    password: PropTypes.string
-}
+    password: PropTypes.string,
+};
 
 const mapStateToProps = (state, props) => {
     if (state.user.redirectTo) {
@@ -80,8 +80,8 @@ const mapStateToProps = (state, props) => {
         state.user.redirectTo = undefined;
     }
     return {
-        isAuth: state.user.isAuth
+        isAuth: state.user.isAuth,
     };
-}
+};
 
 export default connect(mapStateToProps)(Login);
