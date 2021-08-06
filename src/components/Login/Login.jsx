@@ -3,7 +3,7 @@ import React, { useState, useContext } from "react";
 import Button from "../Button/Button";
 import PropTypes from 'prop-types';
 import { connect, ReactReduxContext } from 'react-redux';
-import * as userActions from '../../store/user/user.action';
+import * as thunk from '../../store/user/thunk';
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -26,7 +26,7 @@ const Login = () => {
         e.preventDefault();
         if (email && password) {
             const data = { email: email, password: password };
-            store.dispatch(userActions.login(data));
+            store.dispatch(thunk.login(data));
         }
     };
 

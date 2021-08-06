@@ -1,4 +1,3 @@
-import { CoursesService } from '../../services/courses.service';
 import * as types from './courses.types';
 
 const receiveAllCourses = (courses) => {
@@ -8,24 +7,12 @@ const receiveAllCourses = (courses) => {
     }
 };
 
-export const getAllCourses = () => dispatch => {
-    CoursesService.getAllCourses().then((courses) => {
-        dispatch(receiveAllCourses(courses))
-    });
-}
-
 const recieveCourseById = (course) => {
     return {
         type: types.GET_COURSE_BY_ID,
         course
     }
 };
-
-export const getCourseById = (id) => dispatch => {
-    CoursesService.getCourseById(id).then((course) => {
-        dispatch(recieveCourseById(course))
-    });
-}
 
 const addCourseToList = (course, redirectTo) => {
     return {
@@ -35,16 +22,11 @@ const addCourseToList = (course, redirectTo) => {
     }
 };
 
-export const addCourse = (course) => dispatch => {
-    CoursesService.addCourseToList(course).then(result => {
-        dispatch(addCourseToList(result, '/'));
-    })
-}
-
-const updateCourse = (course) => {
+const updateCourse = (course, redirectTo) => {
     return {
         type: types.UPDATE_COURSE,
-        course
+        course,
+        redirectTo
     }
 };
 
@@ -54,12 +36,6 @@ const removeCourse = (id) => {
         id
     }
 };
-
-export const deleteCourse = (id) => dispatch => {
-    CoursesService.deleteCourseSync(id).then(() => {
-        dispatch(removeCourse(id));
-    })
-}
 
 const redirectTo = (redirectTo) => {
     return {

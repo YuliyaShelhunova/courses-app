@@ -22,8 +22,8 @@ const authors_reducer = (state = store.authors, action) => {
                 ...state,
                 list: [...state.list, action.author]
             }
+        default: return state;
     }
-    return state;
 }
 
 export default authors_reducer;

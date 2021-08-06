@@ -4,11 +4,18 @@ const store = {
         name: "",
         email: "",
         token: "",
+        isAdmin: false,
         redirectTo: undefined
     },
     courses: {
         list: [],
-        currentCourse: {},
+        currentCourse: {
+            title: "",
+            description: "",
+            creationDate: "",
+            duration: 0,
+            authors: []
+        },
         redirectTo: undefined
     },
     authors: {

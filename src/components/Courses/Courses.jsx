@@ -5,14 +5,14 @@ import CourseCard from "../CourseCard/CourseCard";
 import Button from "../Button/Button";
 import PropTypes from 'prop-types';
 import { connect, ReactReduxContext } from 'react-redux';
-import * as actions from '../../store/courses/courses.action';
+import * as thunk from '../../store/courses/thunk';
 
 const Courses = ({ courses }) => {
     const [filteredData, setFilteredData] = useState([]);
     const { store } = useContext(ReactReduxContext);
 
     useEffect(() => {
-        store.dispatch(actions.getAllCourses());
+        store.dispatch(thunk.getAllCourses());
     }, [store]);
 
     const onSearchCourses = (searchTerm) => {

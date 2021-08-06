@@ -4,13 +4,13 @@ import { Utils } from "./../../Utils/Utils";
 import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { connect, ReactReduxContext } from 'react-redux';
-import * as actions from '../../store/courses/courses.action';
+import * as thunk from '../../store/courses/thunk';
 
 const CourseInfo = ({ currentCourse, match }) => {
     const { store } = useContext(ReactReduxContext);
 
     useEffect(() => {
-        store.dispatch(actions.getCourseById(match?.params?.id));
+        store.dispatch(thunk.getCourseById(match?.params?.id));
     }, [match?.params?.id, store]);
 
     return (

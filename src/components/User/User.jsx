@@ -5,7 +5,7 @@ import "./User.css";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect, ReactReduxContext } from 'react-redux';
-import * as userActions from '../../store/user/user.action';
+import * as thunk from '../../store/user/thunk';
 
 const User = ({ user }) => {
     const [isAuthUrl, checkUrl] = useState(false);
@@ -13,18 +13,16 @@ const User = ({ user }) => {
     const { store } = useContext(ReactReduxContext);
 
     useEffect(() => {
-        checkUrl(
-            location.pathname === "/login" || location.pathname === "/registration"
-        );
+        checkUrl(location.pathname === "/login" || location.pathname === "/registration");
     }, [location]);
 
     useEffect(() => {
-        store.dispatch(userActions.getCurrentUser());
+        store.dispatch(thunk.getCurrentUser());
     }, [store])
 
     function onLogout(e) {
         e.preventDefault();
-        store.dispatch(userActions.logout(true));
+        store.dispatch(thunk.logout(true));
     }
 
     return (

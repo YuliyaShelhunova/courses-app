@@ -7,6 +7,7 @@ const user_reducer = (state = store.user, action) => {
             return {
                 name: action.user?.name,
                 email: action.user?.email,
+                isAdmin: action.user?.role === 'admin',
                 isAuth: !!action.user?.id
             };
         case types.LOGIN_USER:
@@ -24,9 +25,12 @@ const user_reducer = (state = store.user, action) => {
         case types.LOGOUT:
             return {
                 ...state,
-                isAuth: !action.isLogout
+                isAuth: !action.isLogout,
+                name: '',
+                email: '',
+                isAdmin: false
             }
+        default: return state;
     }
-    return state;
 }
 export default user_reducer;

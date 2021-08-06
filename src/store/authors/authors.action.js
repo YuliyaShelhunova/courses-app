@@ -1,4 +1,3 @@
-import { AuthorsService } from '../../services/authors.service';
 import * as types from './authors.types';
 
 const receiveAuthors = (authors) => {
@@ -8,24 +7,12 @@ const receiveAuthors = (authors) => {
     }
 };
 
-export const getAllAuthors = () => dispatch => {
-    AuthorsService.getAllAuthors().then(authors => {
-        dispatch(receiveAuthors(authors))
-    })
-}
-
 const recieveAuthorById = (id) => {
     return {
         type: types.GET_AUTHOR_BY_ID,
         id
     }
 };
-
-export const getAuthorById = (id) => dispatch => {
-    AuthorsService.getAuthorById(id).then((author) => {
-        dispatch(recieveAuthorById(author))
-    });
-}
 
 const deleteAuthor = (id) => {
     return {
@@ -40,11 +27,5 @@ const addAuthorToList = (author) => {
         author
     }
 };
-
-export const addAuthor = (author) => (dispatch) => {
-    AuthorsService.addAuthorToList(author).then(result => {
-        dispatch(addAuthorToList(result));
-    })
-}
 
 export { receiveAuthors, recieveAuthorById, addAuthorToList, deleteAuthor };

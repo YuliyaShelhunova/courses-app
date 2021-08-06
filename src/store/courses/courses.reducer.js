@@ -14,7 +14,10 @@ const courses_reducer = (state = store.courses, action) => {
                 currentCourse: action.course
             }
         case types.UPDATE_COURSE:
-            return state.list.find(item => item.id === action.id);
+            return {
+                ...state,
+                redirectTo: action.redirectTo
+            }
         case types.DELETE_COURSE:
             return {
                 ...state,
@@ -26,7 +29,7 @@ const courses_reducer = (state = store.courses, action) => {
                 list: [...state.list, action.course],
                 redirectTo: action.redirectTo
             }
+        default: return state;
     }
-    return state;
 }
 export default courses_reducer;

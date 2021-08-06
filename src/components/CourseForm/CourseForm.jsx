@@ -1,37 +1,71 @@
-import "./CreateCourse.css";
-import React, { useState, useEffect, useContext } from "react";
+import "./CourseForm.css";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import Button from "../Button/Button";
 import { Utils } from "../../Utils/Utils";
-import PropTypes from 'prop-types';
-import { connect, ReactReduxContext } from 'react-redux';
-import * as authorsActions from '../../store/authors/authors.action';
-import * as coursesActions from '../../store/courses/courses.action';
+import PropTypes from "prop-types";
+import { connect, ReactReduxContext } from "react-redux";
+import * as coursesThunk from "../../store/courses/thunk";
+import * as authorsThunk from "../../store/authors/thunk";
 
-const CreateCourse = ({ authors }) => {
+const CourseForm = ({ authors, isAdmin, course, match }) => {
     const [newCourse, changedNewCourse] = useState({
-        title: "",
-        description: "",
-        creationDate: "",
-        duration: 0,
-        authors: [],
+        title: course.title,
+        description: course.description,
+        creationDate: course.creationDate,
+        duration: course.duration,
+        authors: course.authors
     });
     const [authorsList, setAuthors] = useState([]);
     const [authorName, setAuthorName] = useState("");
     const [selectedAuthors, pushSelectedAuthors] = useState([]);
+    const [isInit, setInit] = useState(true);
     const { store } = useContext(ReactReduxContext);
+    const isUpdate = match?.url.indexOf("update") > -1;
+    const nameButton = isUpdate ? "Update course" : "Create course";
 
     useEffect(() => {
-        store.dispatch(authorsActions.getAllAuthors());
+        store.dispatch(authorsThunk.getAllAuthors());
     }, [store]);
 
     useEffect(() => {
         setAuthors(authors);
     }, [authors]);
 
+    const addAuthors = useCallback(
+        (addedAuthors) => {
+            let selectedItems = []
+            addedAuthors.forEach((author) => {
+                if (!selectedItems.find((item) => item.id === author.id)) {
+                    authors.splice(
+                        authorsList.findIndex((item) => item.id === author.id),
+                        1
+                    );
+                    selectedItems.push(author);
+                }
+            });
+            pushSelectedAuthors(selectedItems);
+        },
+        [authors, authorsList]
+    );
+
+    useEffect(() => {
+        if (isAdmin && isUpdate && course.id && isInit) {
+            changedNewCourse(course);
+            addAuthors(course?.authors);
+            setInit(false);
+        }
+    }, [addAuthors, course, isAdmin, isInit, isUpdate]);
+
+    useEffect(() => {
+        if (isAdmin && isUpdate) {
+            store.dispatch(coursesThunk.getCourseById(match?.params?.id));
+        }
+    }, [isAdmin, isUpdate, match?.params?.id, store]);
+
     const onCreateAuthor = (e) => {
         e.preventDefault();
         if (authorName.length > 2) {
-            store.dispatch(authorsActions.addAuthor(authorName));
+            store.dispatch(authorsThunk.addAuthor(authorName));
         }
     };
 
@@ -39,13 +73,7 @@ const CreateCourse = ({ authors }) => {
         e.preventDefault();
         const authorId = e.target.name;
         const author = authorsList.find((item) => item.id === authorId);
-        if (!selectedAuthors.find((item) => item.id === author.id)) {
-            authors.splice(
-                authorsList.findIndex((item) => item.id === authorId),
-                1
-            );
-            pushSelectedAuthors(selectedAuthors.concat(author));
-        }
+        addAuthors([...author]);
     };
 
     const onDeleteAuthor = (e) => {
@@ -87,7 +115,7 @@ const CreateCourse = ({ authors }) => {
         const duration = e.target.value;
         changedNewCourse((data) => ({
             ...data,
-            duration: +duration
+            duration: +duration,
         }));
     };
 
@@ -99,14 +127,15 @@ const CreateCourse = ({ authors }) => {
             newCourse.duration &&
             !!selectedAuthors.length
         ) {
-            const course = {
+            const courseToSend = {
                 title: newCourse.title,
                 description: newCourse.description,
                 creationDate: Utils.generateCurrentDate(),
                 duration: newCourse.duration,
-                authors: selectedAuthors.map(item => item.id),
+                authors: selectedAuthors.map((item) => item.id),
             };
-            store.dispatch(coursesActions.addCourse(course));
+            isUpdate ? store.dispatch(coursesThunk.updateCourse(course.id, courseToSend))
+                     : store.dispatch(coursesThunk.addCourse(courseToSend));
         } else {
             alert("Please, fill in all fields");
         }
@@ -128,7 +157,8 @@ const CreateCourse = ({ authors }) => {
                         </div>
 
                         <div className="right-side">
-                            <Button name="Create course" class="main-button" type="submit" />
+                            {isAdmin ? <Button name={nameButton} class="main-button" type="submit" />
+                                     : <div></div>}
                         </div>
                     </div>
                     <div className="description-block-creating">
@@ -226,18 +256,18 @@ const CreateCourse = ({ authors }) => {
     );
 };
 
-CreateCourse.propTypes = {
+CourseForm.propTypes = {
     newCourse: PropTypes.shape({
         title: PropTypes.string,
         description: PropTypes.string,
         authors: PropTypes.array,
         creationDate: PropTypes.string,
-        duration: PropTypes.number
+        duration: PropTypes.number,
     }),
     authors: PropTypes.array,
     authorName: PropTypes.string,
-    selectedAuthors: PropTypes.array
-}
+    selectedAuthors: PropTypes.array,
+};
 
 const mapStateToProps = (state, props) => {
     if (state.courses.redirectTo) {
@@ -246,8 +276,10 @@ const mapStateToProps = (state, props) => {
     }
 
     return {
-        authors: state.authors.list
+        authors: state.authors.list,
+        isAdmin: state.user.isAdmin,
+        course: state.courses.currentCourse,
     };
-}
+};
 
-export default connect(mapStateToProps)(CreateCourse);
+export default connect(mapStateToProps)(CourseForm);
