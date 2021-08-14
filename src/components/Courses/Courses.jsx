@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import { connect, ReactReduxContext } from "react-redux";
 import * as thunk from "../../store/courses/thunk";
 
-const Courses = ({ courses }) => {
+const Courses = ({ courses, isAdmin }) => {
     const [filteredData, setFilteredData] = useState([]);
     const { store } = useContext(ReactReduxContext);
 
@@ -29,11 +29,15 @@ const Courses = ({ courses }) => {
     return (
         <div className="search-new-course-panel">
             <Search courses={courses} onSearchCourses={onSearchCourses} />
-            <Button
-                name="Add new course"
-                class="main-button new-course"
-                path="/courses/add"
-            />
+            {isAdmin ? (
+                <Button
+                    name="Add new course"
+                    class="main-button new-course"
+                    path="/courses/add"
+                />
+            ) : (
+                    <div></div>
+                )}
             <div>
                 {filteredData.length
                     ? filteredData.map((course) => (
@@ -52,9 +56,10 @@ Courses.propTypes = {
     filteredData: PropTypes.array,
 };
 
-const mapStateToProps = (state) => {
+export const mapStateToProps = (state) => {
     return {
         courses: state.courses.list,
+        isAdmin: state.user.isAdmin,
     };
 };
 

@@ -185,7 +185,7 @@ const CourseForm = ({ authors, isAdmin, course, match }) => {
                             <div>Author name</div>
                             <input
                                 type="text"
-                                className="input"
+                                className="input-author"
                                 placeholder="Enter author name..."
                                 value={authorName}
                                 onChange={onNameChange}
@@ -199,6 +199,7 @@ const CourseForm = ({ authors, isAdmin, course, match }) => {
                     </div>
                     <div className="right-block">
                         <div className="title-for-creation">Authors</div>
+                        <div className="list-authors">
                         {authorsList.map((author) => (
                             <form key={author.id} name={author.id} onSubmit={onAddAuthor}>
                                 <div className="author-existing-block" key={author.id}>
@@ -209,6 +210,7 @@ const CourseForm = ({ authors, isAdmin, course, match }) => {
                                 </div>
                             </form>
                         ))}
+                        </div>
                     </div>
                 </div>
                 <div className="row-blocks">
@@ -218,7 +220,7 @@ const CourseForm = ({ authors, isAdmin, course, match }) => {
                         <input
                             type="number"
                             min="0"
-                            className="input"
+                            className="input-duration"
                             placeholder="Enter duration in minutes..."
                             value={newCourse.duration}
                             onChange={onDurationChange}
@@ -229,7 +231,7 @@ const CourseForm = ({ authors, isAdmin, course, match }) => {
                     </div>
                     <div className="right-block">
                         <div className="title-for-creation">Course authors</div>
-                        <div>
+                        <div className="selected-authors">
                             {!selectedAuthors.length ? (
                                 <span>Author list is empty</span>
                             ) : (
@@ -273,7 +275,7 @@ CourseForm.propTypes = {
     selectedAuthors: PropTypes.array,
 };
 
-const mapStateToProps = (state, props) => {
+export const mapStateToProps = (state, props) => {
     if (state.courses.redirectTo) {
         props.history.push(state.courses.redirectTo);
         state.courses.redirectTo = undefined;

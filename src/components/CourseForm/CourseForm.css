@@ -54,7 +54,7 @@
     width: 45%;
 }
 
-.input {
+.input-author, .input-duration {
     width: 100%;
 }
 
